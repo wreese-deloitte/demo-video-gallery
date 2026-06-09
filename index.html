@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo Video Gallery · ServiceNow Agentic AI Factory</title>
+  <meta name="description" content="A curated catalog of agentic AI demos built by Deloitte on ServiceNow, organized by domain." />
+  <style>
+    /* ===================================================================
+       Agentic AI Demo Video Gallery — Deloitte + ServiceNow co-brand
+       Self-contained single file. June 2025 brand refresh palette.
+       =================================================================== */
+    :root {
+      /* Deloitte brand */
+      --dl-green:      #86BC25;
+      --dl-black:      #000000;
+      --dl-neon-green: #86EB22;
+      --dl-lime:       #B7E320;
+      --dl-green-mid:  #63C631;
+      --dl-teal:       #00b894;
+      --dl-dark-gray:  #282728;
+      --dl-gray:       #E6E6E6;
+      --dl-gray-light: #F5F6F4;
+      --dl-white:      #FFFFFF;
+      /* ServiceNow / PPTX theme palette */
+      --sn-green:      #4EA72E;
+      --sn-navy:       #0E2841;
+      --sn-steel:      #156082;
+      --sn-sky:        #0F9ED5;
+      --sn-cyan:       #3FC3EC;
+      --sn-orange:     #E97132;
+      --dl-blue:       #0F9ED5;
+      --dl-cyan:       #3FC3EC;
+      --dl-light-blue: #A0DCFF;
+      --dl-blue-dark:  #156082;
+      /* Typography & surface */
+      --text-primary:  #0E2841;
+      --text-secondary:#3d5166;
+      --text-muted:    #7a8c9e;
+      --surface:       #FFFFFF;
+      --border:        #dde3ea;
+      --accent:        #86BC25;
+      --font-sans:     'Aptos', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display:  'Aptos Display', 'Aptos', 'Segoe UI', sans-serif;
+      --maxw:          1200px;
+      --radius:        16px;
+      --shadow-sm:     0 1px 2px rgba(40,39,40,.06), 0 2px 8px rgba(40,39,40,.05);
+      --shadow-md:     0 6px 20px rgba(40,39,40,.10);
+      --shadow-lg:     0 18px 50px rgba(40,39,40,.16);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.6;
+      background: var(--dl-white);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: inherit; }
+
+    /* ---------- View management ---------- */
+    .view { display: none; }
+    .view.active {
+      display: block;
+      animation: viewIn .22s ease both;
+    }
+    @keyframes viewIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------- Signature green top line ---------- */
+    .brandline {
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--dl-green) 0%, var(--sn-green) 35%, var(--sn-sky) 70%, var(--sn-cyan) 100%);
+      flex-shrink: 0;
+    }
+
+    /* ---------- Sticky header ---------- */
+    .siteheader {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: saturate(160%) blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .siteheader__inner {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .cobrand { display: flex; align-items: center; gap: 16px; text-decoration: none; cursor: pointer; }
+    .cobrand__deloitte {
+      font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em;
+      color: var(--dl-black); line-height: 1;
+    }
+    .cobrand__deloitte::after { content: "."; color: var(--dl-green); }
+    .cobrand__divider { width: 1px; height: 26px; background: #cfd2cb; }
+    .cobrand__sn {
+      font-size: 1.18rem; font-weight: 600; letter-spacing: -.01em;
+      color: var(--dl-dark-gray); line-height: 1;
+    }
+    .cobrand__sn .o { color: var(--sn-green); }
+    .headernav { display: flex; align-items: center; gap: 26px; }
+    .headernav a {
+      text-decoration: none; font-size: .92rem; font-weight: 600;
+      color: var(--text-secondary); padding: 6px 2px;
+      border-bottom: 2px solid transparent;
+      transition: color .15s ease, border-color .15s ease;
+      cursor: pointer;
+    }
+    .headernav a:hover { color: var(--dl-green); }
+    .headernav a.active { color: var(--text-primary); border-color: var(--dl-green); }
+
+    /* ---------- Utilities ---------- */
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+    .accent-word { font-style: italic; color: var(--dl-green); font-weight: 800; }
+
+    /* ===================================================================
+       HERO — Landing view
+       =================================================================== */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 900px 700px at 88% 50%, rgba(78,167,46,.32), transparent 60%),
+        radial-gradient(ellipse 700px 500px at 96% 20%, rgba(15,158,213,.28), transparent 55%),
+        radial-gradient(ellipse 650px 450px at 72% 82%, rgba(183,227,32,.22), transparent 50%),
+        radial-gradient(ellipse 450px 380px at 55% 55%, rgba(21,96,130,.12), transparent 45%),
+        linear-gradient(135deg, #f2f7ff 0%, #edfaf4 40%, #e8faf2 65%, #e4f4ff 100%);
+    }
+    .hero__inner {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 60px 28px 80px;
+      display: grid;
+      grid-template-columns: 44fr 56fr;
+      align-items: center;
+      gap: 32px;
+      min-height: calc(100vh - 57px);
+    }
+    .hero h1 {
+      margin: 0; font-family: var(--font-display); font-weight: 800; font-style: italic;
+      letter-spacing: -.025em; line-height: 1.0;
+      font-size: clamp(2.8rem, 5.6vw, 4.8rem);
+    }
+    .hero h1 a {
+      text-decoration: none; color: var(--sn-navy);
+      position: relative; transition: color .18s ease; cursor: pointer;
+    }
+    .hero h1 a::after {
+      content: ""; position: absolute; left: 0; right: 100%;
+      bottom: .06em; height: .09em;
+      background: linear-gradient(90deg, var(--dl-green), var(--sn-sky));
+      transition: right .35s cubic-bezier(.2,.7,.2,1);
+    }
+    .hero h1 a:hover { color: var(--sn-steel); }
+    .hero h1 a:hover::after { right: 8%; }
+    .hero__sub {
+      margin: 12px 0 0;
+      font-size: clamp(1rem, 1.6vw, 1.22rem);
+      font-weight: 400; color: var(--text-secondary); letter-spacing: 0;
+    }
+    .hero__lede {
+      margin: 28px 0 0; max-width: 32em;
+      font-size: 1rem; color: var(--text-secondary);
+    }
+    .hero__cta { margin-top: 30px; display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--font-sans); font-weight: 700; font-size: .98rem;
+      text-decoration: none; padding: 13px 24px; border-radius: 10px;
+      cursor: pointer; border: 2px solid transparent;
+      transition: transform .14s ease, background .18s ease, box-shadow .18s ease, color .18s ease;
+    }
+    .btn--primary {
+      background: var(--dl-green); color: #fff;
+      box-shadow: 0 8px 22px rgba(134,188,37,.32);
+    }
+    .btn--primary:hover {
+      background: #76a71f; transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(134,188,37,.40);
+    }
+    .btn .arrow { transition: transform .18s ease; }
+    .btn:hover .arrow { transform: translateX(4px); }
+    .hero__art { position: relative; display: flex; justify-content: center; align-items: center; align-self: center; }
+    .spark { width: min(100%, 590px); height: auto; }
+    .spark .core { animation: pulse 5.5s ease-in-out infinite; transform-origin: center; }
+    @keyframes pulse { 0%,100% { opacity:.92; } 50% { opacity:1; transform: scale(1.025); } }
+
+    /* ===================================================================
+       PAGE HEADER — Domains view
+       =================================================================== */
+    .pagehead {
+      position: relative; overflow: hidden;
+      background:
+        radial-gradient(700px 380px at 92% 10%, rgba(15,158,213,.18), transparent 60%),
+        radial-gradient(620px 360px at 6% 120%, rgba(78,167,46,.16), transparent 55%),
+        linear-gradient(135deg, #f2f7ff, #edfaf4 60%, #e8f5ff);
+      border-bottom: 1px solid var(--border);
+    }
+    .pagehead__inner { max-width: var(--maxw); margin: 0 auto; padding: 56px 28px 48px; }
+    .breadcrumb { font-size: .85rem; color: var(--text-muted); margin-bottom: 14px; }
+    .breadcrumb a { color: var(--sn-steel); text-decoration: none; font-weight: 600; cursor: pointer; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .pagehead h1 {
+      margin: 0; font-family: var(--font-display); font-weight: 800; font-style: italic;
+      letter-spacing: -.02em; line-height: 1.05;
+      font-size: clamp(2.1rem, 4vw, 3.1rem); color: var(--sn-navy);
+    }
+    .pagehead p { margin: 14px 0 0; max-width: 46em; font-size: 1.03rem; color: var(--text-secondary); }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap; margin-top: 30px;
+    }
+    .search { position: relative; flex: 1 1 320px; max-width: 440px; }
+    .search input {
+      width: 100%; font-family: inherit; font-size: .98rem;
+      padding: 12px 16px 12px 44px; border: 1.5px solid var(--border);
+      border-radius: 10px; background: #fff; color: var(--text-primary);
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .search input:focus {
+      outline: none; border-color: var(--sn-steel);
+      box-shadow: 0 0 0 3px rgba(21,96,130,.15);
+    }
+    .search svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+    .totals { font-size: .9rem; color: var(--text-secondary); font-weight: 600; }
+    .totals strong { color: var(--dl-green); font-weight: 800; }
+
+    /* Domain grid */
+    .domain-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 22px; padding: 48px 0 8px;
+    }
+    .domain-card {
+      position: relative; display: flex; flex-direction: column;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 26px 24px 22px;
+      text-decoration: none; color: inherit; overflow: hidden;
+      box-shadow: var(--shadow-sm); cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .domain-card::before {
+      content: ""; position: absolute; inset: 0 auto 0 0;
+      width: 5px; background: var(--card-accent, var(--dl-green));
+      transition: width .2s ease;
+    }
+    .domain-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: transparent; }
+    .domain-card:hover::before { width: 7px; }
+    .domain-card__top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 12px; margin-bottom: 14px;
+    }
+    .domain-icon {
+      width: 46px; height: 46px; flex: 0 0 auto; border-radius: 12px;
+      display: grid; place-items: center;
+      background: var(--card-accent-soft, rgba(134,188,37,.12));
+      color: var(--card-accent, var(--dl-green));
+    }
+    .count-badge {
+      display: inline-flex; align-items: baseline; gap: 5px;
+      font-size: .78rem; font-weight: 700; color: var(--text-secondary);
+      background: var(--dl-gray-light); border: 1px solid var(--border);
+      border-radius: 999px; padding: 5px 12px; white-space: nowrap;
+    }
+    .count-badge strong { font-size: 1rem; color: var(--card-accent, var(--dl-green)); }
+    .count-badge.is-empty { color: var(--text-muted); }
+    .count-badge.is-empty strong { color: var(--text-muted); }
+    .domain-card h2 {
+      margin: 0 0 8px; font-family: var(--font-display); font-size: 1.22rem; font-weight: 700;
+      letter-spacing: -.01em; line-height: 1.2; color: var(--sn-navy);
+    }
+    .domain-card p { margin: 0; font-size: .94rem; color: var(--text-secondary); flex-grow: 1; }
+    .domain-card__foot {
+      margin-top: 18px; display: inline-flex; align-items: center; gap: 8px;
+      font-size: .9rem; font-weight: 700; color: var(--card-accent, var(--dl-green));
+    }
+    .domain-card__foot .arrow { transition: transform .18s ease; }
+    .domain-card:hover .domain-card__foot .arrow { transform: translateX(4px); }
+    .empty-state { display: none; text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty-state.show { display: block; }
+    .empty-state strong { color: var(--text-primary); }
+
+    /* Footer */
+    .sitefooter { margin-top: 40px; background: var(--dl-dark-gray); color: #cfd2cb; }
+    .sitefooter__inner {
+      max-width: var(--maxw); margin: 0 auto; padding: 34px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap; font-size: .85rem;
+    }
+    .sitefooter .cobrand__deloitte { color: #fff; font-size: 1.15rem; }
+    .sitefooter .cobrand__sn { color: #e6e6e6; font-size: 1rem; }
+    .sitefooter .cobrand__divider { background: #4a4a48; }
+    .sitefooter a { color: var(--dl-neon-green); text-decoration: none; cursor: pointer; }
+    .sitefooter a:hover { text-decoration: underline; }
+
+    /* ===================================================================
+       DEMO CARDS — Domain detail view
+       =================================================================== */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding: 48px 0 64px;
+    }
+    .demo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .demo-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: transparent; }
+    .demo-card__thumb-wrap {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, var(--sn-navy) 0%, var(--sn-steel) 100%);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .demo-card__thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .demo-card__thumb-placeholder {
+      width: 100%; height: 100%;
+      display: grid; place-items: center;
+      color: rgba(255,255,255,.3);
+    }
+    .demo-card__body {
+      padding: 20px 22px 22px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .demo-card h3 {
+      margin: 0 0 10px;
+      font-family: var(--font-display);
+      font-size: 1.06rem; font-weight: 700;
+      letter-spacing: -.01em; line-height: 1.25;
+      color: var(--sn-navy);
+    }
+    .demo-card__desc {
+      margin: 0 0 20px;
+      font-size: .9rem; color: var(--text-secondary); line-height: 1.6;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .btn--watch {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-sans); font-weight: 700; font-size: .9rem;
+      padding: 10px 18px; border-radius: 8px;
+      background: var(--dl-green); color: #fff;
+      text-decoration: none; border: none; cursor: pointer;
+      align-self: flex-start;
+      box-shadow: 0 4px 12px rgba(134,188,37,.28);
+      transition: background .15s ease, transform .14s ease, box-shadow .14s ease;
+    }
+    .btn--watch:hover {
+      background: #76a71f; transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(134,188,37,.38);
+    }
+    .demo-results__label {
+      margin: 40px 0 0; font-size: .92rem; color: var(--text-secondary);
+    }
+    .demo-results__label strong { color: var(--text-primary); }
+    .demo-results__label span { color: var(--dl-green); font-weight: 700; }
+    .btn--watch--disabled {
+      background: var(--dl-gray); color: var(--text-muted);
+      cursor: default; pointer-events: none; box-shadow: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 940px) {
+      .domain-grid { grid-template-columns: repeat(2, 1fr); }
+      .demo-grid  { grid-template-columns: repeat(2, 1fr); }
+      .hero__inner { grid-template-columns: 1fr; align-items: flex-start; padding: 48px 28px 60px; min-height: auto; }
+      .hero__art { order: -1; max-width: 360px; margin: 0 auto; }
+      .headernav { display: none; }
+    }
+    @media (max-width: 600px) {
+      .domain-grid { grid-template-columns: 1fr; }
+      .demo-grid  { grid-template-columns: 1fr; }
+      .siteheader__inner { padding: 12px 18px; }
+      .wrap, .hero__inner, .pagehead__inner { padding-left: 18px; padding-right: 18px; }
+      .hero__cta { flex-direction: column; align-items: stretch; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ Persistent chrome ============ -->
+  <div class="brandline"></div>
+
+  <header class="siteheader">
+    <div class="siteheader__inner">
+      <div class="cobrand" data-view="home" aria-label="Return to home">
+        <span class="cobrand__deloitte">Deloitte</span>
+        <span class="cobrand__divider" aria-hidden="true"></span>
+        <span class="cobrand__sn">service<span class="o">n</span>ow</span>
+      </div>
+      <nav class="headernav" aria-label="Primary">
+        <a id="nav-home" data-view="home" class="active">Home</a>
+        <a id="nav-domains" data-view="domains">Domains</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       VIEW 1 — Landing
+       ============================================================ -->
+  <div id="view-home" class="view active">
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__inner">
+          <div class="hero__copy">
+            <h1 id="hero-title">
+              <a data-view="domains">Demo Video Gallery</a>
+            </h1>
+
+            <p class="hero__sub">ServiceNow Agentic AI Factory</p>
+
+            <p class="hero__lede">
+              A curated catalog of agentic AI demos built by Deloitte on ServiceNow
+              - organized by domain so you can quickly find the solution stories
+              most relevant to your conversation.
+            </p>
+
+            <div class="hero__cta">
+              <button class="btn btn--primary" data-view="domains">
+                Enter the gallery <span class="arrow" aria-hidden="true">&rarr;</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ServiceNow spark motif -->
+          <div class="hero__art" aria-hidden="true">
+            <svg class="spark" viewBox="0 0 460 460" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <!-- Ambient background: soft glow, fades to transparent at edges -->
+                <radialGradient id="sf-bg" cx="52%" cy="46%" r="52%">
+                  <stop offset="0%"   stop-color="#a8e8d0"/>
+                  <stop offset="55%"  stop-color="#7cc8e0" stop-opacity="0.55"/>
+                  <stop offset="100%" stop-color="#58a8e0" stop-opacity="0"/>
+                </radialGradient>
+
+                <!-- Sphere: translucent glassy bubble — page gradient shows through.
+                     Very low opacity at centre, builds to lime-green at mid-radius, fades to transparent. -->
+                <radialGradient id="sf-orb" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"   stop-color="#f0ffdc" stop-opacity="0.06"/>
+                  <stop offset="18%"  stop-color="#ccff60" stop-opacity="0.32"/>
+                  <stop offset="44%"  stop-color="#98de24" stop-opacity="0.62"/>
+                  <stop offset="66%"  stop-color="#72c010" stop-opacity="0.78"/>
+                  <stop offset="84%"  stop-color="#52ae08" stop-opacity="0.52"/>
+                  <stop offset="100%" stop-color="#349800" stop-opacity="0"/>
+                </radialGradient>
+
+                <!-- Per-ray gradients: center(230,230)=white → tip=color  -->
+                <!-- gradientUnits="userSpaceOnUse" ties coords to SVG canvas -->
+
+                <!-- Pale / nearly-white going straight up -->
+                <linearGradient id="sf-pale-n" gradientUnits="userSpaceOnUse"
+                                x1="230" y1="230" x2="222" y2="50">
+                  <stop offset="0%"  stop-color="#ffffff"/>
+                  <stop offset="55%" stop-color="#daf4ff"/>
+                  <stop offset="100%" stop-color="#c0eeff" stop-opacity="0.55"/>
+                </linearGradient>
+
+                <!-- Lime-green → upper-right (NNE, ~35° from vertical) -->
+                <linearGradient id="sf-lime-ne" gradientUnits="userSpaceOnUse"
+                                x1="230" y1="230" x2="358" y2="72">
+                  <stop offset="0%"  stop-color="#ffffff"/>
+                  <stop offset="30%" stop-color="#d8fa40"/>
+                  <stop offset="100%" stop-color="#96d018"/>
+                </linearGradient>
+
+                <!-- Orange → coral-red, going right (E, ~12° above horizontal) -->
+                <linearGradient id="sf-orange-e" gradientUnits="userSpaceOnUse"
+                                x1="230" y1="230" x2="416" y2="198">
+                  <stop offset="0%"  stop-color="#ffffff"/>
+                  <stop offset="22%" stop-color="#fcd870"/>
+                  <stop offset="55%" stop-color="#f88038"/>
+                  <stop offset="100%" stop-color="#f02e20"/>
+                </linearGradient>
+
+                <!-- Dark navy-blue → lower-right (SE, ~45°) -->
+                <linearGradient id="sf-dkblue-se" gradientUnits="userSpaceOnUse"
+                                x1="230" y1="230" x2="364" y2="355">
+                  <stop offset="0%"  stop-color="#ffffff"/>
+                  <stop offset="28%" stop-color="#7098d8"/>
+                  <stop offset="70%" stop-color="#2858a8"/>
+                  <stop offset="100%" stop-color="#143270"/>
+                </linearGradient>
+
+                <!-- Hot pink / magenta, going down (S, slight right) -->
+                <linearGradient id="sf-pink-s" gradientUnits="userSpaceOnUse"
+                                x1="230" y1="230" x2="246" y2="416">
+                  <stop offset="0%"  stop-color="#ffffff"/>
+                  <stop offset="28%" stop-color="#f8c0e8"/>
+                  <stop offset="65%" stop-color="#f048b8"/>
+                  <stop offset="100%" stop-color="#cc10a0"/>
+                </linearGradient>
+
+                <!-- Dark teal-green → lower-left (SW, ~45°) -->
+                <linearGradient id="sf-dkteal-sw" gradientUnits="userSpaceOnUse"
+                                x1="230" y1="230" x2="90" y2="374">
+                  <stop offset="0%"  stop-color="#ffffff"/>
+                  <stop offset="28%" stop-color="#3cc890"/>
+                  <stop offset="65%" stop-color="#109060"/>
+                  <stop offset="100%" stop-color="#086048"/>
+                </linearGradient>
+
+                <!-- Blue → going left (W, ~16° above horizontal) -->
+                <linearGradient id="sf-blue-w" gradientUnits="userSpaceOnUse"
+                                x1="230" y1="230" x2="64" y2="188">
+                  <stop offset="0%"  stop-color="#ffffff"/>
+                  <stop offset="25%" stop-color="#88c8f8"/>
+                  <stop offset="62%" stop-color="#3080e8"/>
+                  <stop offset="100%" stop-color="#1460c0"/>
+                </linearGradient>
+
+                <!-- Teal-cyan → upper-left (NW, ~40° from vertical) -->
+                <linearGradient id="sf-cyan-nw" gradientUnits="userSpaceOnUse"
+                                x1="230" y1="230" x2="108" y2="84">
+                  <stop offset="0%"  stop-color="#ffffff"/>
+                  <stop offset="28%" stop-color="#50e8d8"/>
+                  <stop offset="70%" stop-color="#10c0b0"/>
+                  <stop offset="100%" stop-color="#08a098"/>
+                </linearGradient>
+
+                <!-- Center bloom -->
+                <radialGradient id="sf-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"   stop-color="#ffffff"/>
+                  <stop offset="38%"  stop-color="#ffffff" stop-opacity="0.9"/>
+                  <stop offset="72%"  stop-color="#f0ffee" stop-opacity="0.45"/>
+                  <stop offset="100%" stop-color="#e8ffea" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+
+              <!-- Sphere — translucent; page gradient visible through it -->
+              <circle cx="230" cy="230" r="210" fill="url(#sf-orb)"/>
+
+              <!-- Rays — all drawn center→tip, gradient white@center→color@tip -->
+              <g class="core" stroke-linecap="round" fill="none">
+                <line x1="230" y1="230" x2="222" y2="50"  stroke="url(#sf-pale-n)"   stroke-width="21"/>
+                <line x1="230" y1="230" x2="358" y2="72"  stroke="url(#sf-lime-ne)"  stroke-width="26"/>
+                <line x1="230" y1="230" x2="416" y2="198" stroke="url(#sf-orange-e)" stroke-width="23"/>
+                <line x1="230" y1="230" x2="364" y2="355" stroke="url(#sf-dkblue-se)" stroke-width="24"/>
+                <line x1="230" y1="230" x2="246" y2="416" stroke="url(#sf-pink-s)"   stroke-width="24"/>
+                <line x1="230" y1="230" x2="90"  y2="374" stroke="url(#sf-dkteal-sw)" stroke-width="26"/>
+                <line x1="230" y1="230" x2="64"  y2="188" stroke="url(#sf-blue-w)"   stroke-width="24"/>
+                <line x1="230" y1="230" x2="108" y2="84"  stroke="url(#sf-cyan-nw)"  stroke-width="25"/>
+              </g>
+
+              <!-- White bloom at center, on top of everything -->
+              <circle cx="230" cy="230" r="58" fill="url(#sf-glow)"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="sitefooter">
+      <div class="sitefooter__inner">
+        <div class="cobrand" data-view="home">
+          <span class="cobrand__deloitte">Deloitte</span>
+          <span class="cobrand__divider" aria-hidden="true"></span>
+          <span class="cobrand__sn">service<span class="o">n</span>ow</span>
+        </div>
+        <div>Agentic AI Factory &middot; Demo Video Gallery &middot;
+          <a data-view="domains">Browse domains</a>
+        </div>
+      </div>
+    </footer>
+  </div><!-- /view-home -->
+
+  <!-- ============================================================
+       VIEW 2 — Domains
+       ============================================================ -->
+  <div id="view-domains" class="view">
+    <main>
+      <section class="pagehead" aria-labelledby="page-title">
+        <div class="pagehead__inner">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a data-view="home">Demo Video Gallery</a> &nbsp;/&nbsp; Domains
+          </nav>
+          <h1 id="page-title">Browse by <span class="accent-word">domain</span></h1>
+          <p>Every agentic AI demo is grouped under a ServiceNow domain. Pick a domain to see the solution stories aligned to it.</p>
+          <div class="toolbar">
+            <div class="search">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input id="domainSearch" type="search" placeholder="Search demos…"
+                     aria-label="Search demos" autocomplete="off"/>
+            </div>
+            <p class="totals">
+              <span id="domainCount">6</span> domains &middot;
+              <strong id="demoCount">0</strong> demos catalogued
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="wrap">
+        <div class="domain-grid" id="domainGrid"></div>
+        <div id="demoResults" style="display:none"></div>
+        <div class="empty-state" id="emptyState">
+          No demos match <strong id="emptyTerm"></strong>. Try another search.
+        </div>
+      </section>
+    </main>
+
+    <footer class="sitefooter">
+      <div class="sitefooter__inner">
+        <div class="cobrand" data-view="home">
+          <span class="cobrand__deloitte">Deloitte</span>
+          <span class="cobrand__divider" aria-hidden="true"></span>
+          <span class="cobrand__sn">service<span class="o">n</span>ow</span>
+        </div>
+        <div>Agentic AI Factory &middot; Demo Video Gallery &middot;
+          <a data-view="home">Home</a>
+        </div>
+      </div>
+    </footer>
+  </div><!-- /view-domains -->
+
+  <!-- ============================================================
+       VIEW 3 — Tech and Platform demos
+       ============================================================ -->
+  <div id="view-tech-and-platform" class="view">
+    <main>
+      <section class="pagehead" aria-labelledby="tp-title">
+        <div class="pagehead__inner">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a data-view="home">Demo Video Gallery</a> &nbsp;/&nbsp;
+            <a data-view="domains">Domains</a> &nbsp;/&nbsp;
+            Tech and Platform
+          </nav>
+          <h1 id="tp-title">Tech and <span class="accent-word">Platform</span></h1>
+          <p>Autonomous IT operations and platform delivery — service desk, AIOps, accelerated ServiceNow build, and governance.</p>
+        </div>
+      </section>
+
+      <section class="wrap">
+        <div class="demo-grid" id="techPlatformGrid"></div>
+      </section>
+    </main>
+
+    <footer class="sitefooter">
+      <div class="sitefooter__inner">
+        <div class="cobrand" data-view="home">
+          <span class="cobrand__deloitte">Deloitte</span>
+          <span class="cobrand__divider" aria-hidden="true"></span>
+          <span class="cobrand__sn">service<span class="o">n</span>ow</span>
+        </div>
+        <div>Agentic AI Factory &middot; Demo Video Gallery &middot;
+          <a data-view="domains">All Domains</a>
+        </div>
+      </div>
+    </footer>
+  </div><!-- /view-tech-and-platform -->
+
+  <script>
+    /* ================================================================
+       DOMAIN DATA — single source of truth.
+       Update `count` values and add `href` once video pages are ready.
+       ================================================================ */
+    const DOMAINS = [
+      {
+        slug: "ai-governance-and-security",
+        name: "AI Governance and Security",
+        blurb: "Govern, secure, and monitor AI across the enterprise — from identity and access controls to full AI lifecycle oversight.",
+        count: 2,
+        accent: "#86BC25",
+        accentSoft: "rgba(134,188,37,.12)",
+        icon: "shield"
+      },
+      {
+        slug: "employee-experience",
+        name: "Employee Experience",
+        blurb: "Consumer-grade, AI-powered service experiences that help every employee get answers and get work done.",
+        count: 5,
+        accent: "#00A3E0",
+        accentSoft: "rgba(0,163,224,.12)",
+        icon: "people"
+      },
+      {
+        slug: "finance-and-value",
+        name: "Finance and Value",
+        blurb: "Agentic AI that automates finance operations and connects AI investment to measurable business value.",
+        count: 3,
+        accent: "#005587",
+        accentSoft: "rgba(0,85,135,.12)",
+        icon: "chart"
+      },
+      {
+        slug: "tech-and-platform",
+        name: "Tech and Platform",
+        blurb: "Autonomous IT operations and platform delivery — service desk, AIOps, accelerated ServiceNow build, and governance.",
+        count: 9,
+        accent: "#63C631",
+        accentSoft: "rgba(99,198,49,.14)",
+        icon: "stack",
+        viewSlug: "tech-and-platform"
+      },
+      {
+        slug: "revenue-and-customer-experience",
+        name: "Revenue and Customer Experience",
+        blurb: "AI-assisted selling and service that speeds resolution and elevates every customer interaction.",
+        count: 4,
+        accent: "#86EB22",
+        accentSoft: "rgba(134,235,34,.16)",
+        icon: "headset"
+      },
+      {
+        slug: "smart-factory-robotic-arm",
+        name: "Smart Factory Robotic Arm",
+        blurb: "Agentic AI applied to connected manufacturing — robotics, shop-floor operations, and physical-world automation.",
+        count: 0,
+        accent: "#00b894",
+        accentSoft: "rgba(0,184,148,.14)",
+        icon: "robot"
+      }
+    ];
+
+    const ICONS = {
+      shield:  '<path d="M12 3l7 3v5c0 4.4-3 8-7 10-4-2-7-5.6-7-10V6l7-3z"/>',
+      people:  '<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-5 6-5s6 1.7 6 5"/><path d="M16 8a3 3 0 0 1 0 6"/><path d="M19 20c0-2.5-1-4-3-4.5"/>',
+      chart:   '<path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/>',
+      stack:   '<path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/>',
+      headset: '<path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19a4 4 0 0 1-4 3h-2"/>',
+      robot:   '<rect x="6" y="9" width="12" height="9" rx="2"/><path d="M12 9V5M12 5h4l2 3"/><circle cx="9.5" cy="13" r="1"/><circle cx="14.5" cy="13" r="1"/><path d="M4 13v3M20 13v3"/>'
+    };
+
+    /* ----------------------------------------------------------------
+       View switching
+       ---------------------------------------------------------------- */
+    function showView(name) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + name).classList.add('active');
+      document.getElementById('nav-home').classList.toggle('active',    name === 'home');
+      document.getElementById('nav-domains').classList.toggle('active', name === 'domains');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Wire up all data-view triggers (links, buttons, divs)
+    document.addEventListener('click', function(e) {
+      const el = e.target.closest('[data-view]');
+      if (el) {
+        e.preventDefault();
+        showView(el.dataset.view);
+      }
+    });
+
+    /* ----------------------------------------------------------------
+       Domain grid rendering
+       ---------------------------------------------------------------- */
+    function svgIcon(name) {
+      return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+             'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+             (ICONS[name] || ICONS.stack) + '</svg>';
+    }
+
+    function badge(count) {
+      return count > 0
+        ? '<span class="count-badge"><strong>' + count + '</strong> demo' + (count === 1 ? '' : 's') + '</span>'
+        : '<span class="count-badge is-empty">Coming soon</span>';
+    }
+
+    function cardHTML(d) {
+      const foot = d.count > 0 ? 'View demos' : 'Stay tuned';
+      const viewAttr = d.viewSlug ? ' data-view="' + d.viewSlug + '"' : '';
+      return (
+        '<div class="domain-card"' + viewAttr + ' ' +
+        'style="--card-accent:' + d.accent + ';--card-accent-soft:' + d.accentSoft + '" ' +
+        'data-name="' + d.name.toLowerCase() + '" data-blurb="' + d.blurb.toLowerCase() + '">' +
+          '<div class="domain-card__top">' +
+            '<span class="domain-icon">' + svgIcon(d.icon) + '</span>' +
+            badge(d.count) +
+          '</div>' +
+          '<h2>' + d.name + '</h2>' +
+          '<p>' + d.blurb + '</p>' +
+          '<span class="domain-card__foot">' + foot +
+            ' <span class="arrow" aria-hidden="true">&rarr;</span></span>' +
+        '</div>'
+      );
+    }
+
+    function render() {
+      document.getElementById('domainGrid').innerHTML = DOMAINS.map(cardHTML).join('');
+      document.getElementById('domainCount').textContent = DOMAINS.length;
+      document.getElementById('demoCount').textContent =
+        DOMAINS.reduce((sum, d) => sum + d.count, 0);
+    }
+
+    function filter() {
+      const raw  = document.getElementById('domainSearch').value.trim();
+      const term = raw.toLowerCase();
+      const grid    = document.getElementById('domainGrid');
+      const results = document.getElementById('demoResults');
+      const empty   = document.getElementById('emptyState');
+
+      if (!term) {
+        grid.style.display = '';
+        results.style.display = 'none';
+        results.innerHTML = '';
+        empty.classList.remove('show');
+        return;
+      }
+
+      // Search across all populated demo datasets
+      const ALL_DEMOS = [
+        ...TECH_PLATFORM_DEMOS.map(d => Object.assign({}, d, { domain: 'Tech &amp; Platform' }))
+      ];
+
+      const matches = ALL_DEMOS.filter(d =>
+        d.name.toLowerCase().includes(term) ||
+        d.description.toLowerCase().includes(term)
+      );
+
+      grid.style.display = 'none';
+
+      if (matches.length === 0) {
+        results.style.display = 'none';
+        results.innerHTML = '';
+        document.getElementById('emptyTerm').textContent = '"' + raw + '"';
+        empty.classList.add('show');
+      } else {
+        empty.classList.remove('show');
+        results.style.display = '';
+        results.innerHTML =
+          '<p class="demo-results__label"><strong>' + matches.length + '</strong> demo' +
+          (matches.length === 1 ? '' : 's') + ' found in <span>' + matches[0].domain + '</span></p>' +
+          '<div class="demo-grid">' + matches.map(demoCardHTML).join('') + '</div>';
+      }
+    }
+
+    render();
+    document.getElementById('domainSearch').addEventListener('input', filter);
+
+    /* ================================================================
+       TECH AND PLATFORM — Demo data
+       ================================================================ */
+    const TECH_PLATFORM_DEMOS = [
+      {
+        name: "ServiceNow AI Control Tower (AICT)",
+        description: "Centralized AI governance platform to register, govern, and manage enterprise AI initiatives with visibility into deployment, performance, and compliance readiness.",
+        link: "https://amedeloitte.sharepoint.com/:v:/r/sites/GenAIEP-TSORoadmap/Shared%20Documents/Agentic%20Factory/03.%20Marketing%20Materials/Demo%20Video%20Gallery/Tech%20%26%20Platform/ServiceNow%20AI%20Control%20Tower%20(AICT).mp4?csf=1&web=1&e=YagWww",
+        thumbnail: "thumbnails/ServiceNow AI Control Tower (AICT).png"
+      },
+      {
+        name: "SAM – Software License Management Agent",
+        description: "License consumption management agents that utilize ServiceNow Now Assist AI Agents to strategically analyze and output license details for software models, bridging manual processes to automated workflows for data collection and optimization.",
+        link: "https://amedeloitte.sharepoint.com/:v:/r/sites/GenAIEP-TSORoadmap/Shared%20Documents/Agentic%20Factory/03.%20Marketing%20Materials/Demo%20Video%20Gallery/Tech%20%26%20Platform/SAM%20-%20Software%20License%20Management%20Agent.mp4?csf=1&web=1&e=lQtixd",
+        thumbnail: "thumbnails/SAM - Software License Management Agent.png"
+      },
+      {
+        name: "MoveWorks / AI Front Door",
+        description: "Conversational AI front door enabling unified employee experience, task automation, and enterprise search — connecting systems and workflows seamlessly for employees.",
+        link: "https://amedeloitte.sharepoint.com/:v:/r/sites/GenAIEP-TSORoadmap/Shared%20Documents/Agentic%20Factory/03.%20Marketing%20Materials/Demo%20Video%20Gallery/Tech%20%26%20Platform/MoveWorks.mp4?csf=1&web=1&e=gG3aUP",
+        thumbnail: "thumbnails/MoveWorks.png"
+      },
+      {
+        name: "Enterprise AI Navigator",
+        description: "End-to-end transformation solution to scale AI adoption by identifying use cases, quantifying value, and designing future-state workflows across the enterprise.",
+        link: null,
+        thumbnail: null
+      },
+      {
+        name: "Autonomous Service Desk",
+        description: "AI-powered service desk leveraging specialized AI agents embedded within ServiceNow ITSM workflows to autonomously intake, triage, diagnose, and resolve routine IT incidents — reducing ticket handling, accelerating resolution times, and improving SLA performance at scale.",
+        link: "https://amedeloitte.sharepoint.com/:v:/r/sites/GenAIEP-TSORoadmap/Shared%20Documents/Agentic%20Factory/03.%20Marketing%20Materials/Demo%20Video%20Gallery%20(External%20Stakeholder-Facing)/Tech%20%26%20Platform/Autonomous%20Service%20Desk.mp4?csf=1&web=1&e=R0j7sq",
+        thumbnail: "thumbnails/Autonomous Service Desk.png"
+      },
+      {
+        name: "CIO Insights",
+        description: "Executive intelligence layer on top of the ServiceNow CIO Dashboard enabling CIOs and senior IT leaders to interact with enterprise metrics through natural language, translating complex data into business-relevant insights in real time.",
+        link: "https://amedeloitte.sharepoint.com/:v:/r/sites/GenAIEP-TSORoadmap/Shared%20Documents/Agentic%20Factory/03.%20Marketing%20Materials/Demo%20Video%20Gallery/Tech%20%26%20Platform/CIO%20Insights.mp4?csf=1&web=1&e=EBs94U",
+        thumbnail: "thumbnails/CIO Insights.png"
+      },
+      {
+        name: "Resolution Notes Evaluator",
+        description: "AI-powered quality and governance agent that automatically evaluates incident resolution notes against an ITIL-aligned rubric — scoring clarity, completeness, technical accuracy, and compliance to improve audit readiness and AI agent effectiveness.",
+        link: "https://amedeloitte.sharepoint.com/:v:/r/sites/GenAIEP-TSORoadmap/Shared%20Documents/Agentic%20Factory/03.%20Marketing%20Materials/Demo%20Video%20Gallery/Tech%20%26%20Platform/Resolution%20Notes%20Evaluator.mp4?csf=1&web=1&e=ZWiBPk",
+        thumbnail: "thumbnails/Resolution Notes Evaluator.png"
+      },
+      {
+        name: "Amplify for Service Management (A4SM)",
+        description: "AI-powered accelerator for ServiceNow implementations that helps delivery teams move faster from requirements to build and test — analyzing user stories, generating configuration artifacts, producing ATF and manual test outputs, and supporting brownfield code updates.",
+        link: "https://amedeloitte.sharepoint.com/:v:/r/sites/GenAIEP-TSORoadmap/Shared%20Documents/Agentic%20Factory/03.%20Marketing%20Materials/Demo%20Video%20Gallery/Tech%20%26%20Platform/Amplify%20for%20Service%20Management%20(A4SM).mp4?csf=1&web=1&e=10ZxG9",
+        thumbnail: "thumbnails/Amplify for Service Management (A4SM).png"
+      },
+      {
+        name: "Front Door Demand Manager and Business Case Builder",
+        description: "Helps organizations turn early-stage ideas into stronger, decision-ready demands. Built in ServiceNow SPM, it combines guided intake and AI-assisted business case development to improve demand quality, reduce rework, and move efficiently from concept to evaluation.",
+        link: "https://amedeloitte.sharepoint.com/:v:/r/sites/GenAIEP-TSORoadmap/Shared%20Documents/Agentic%20Factory/03.%20Marketing%20Materials/Demo%20Video%20Gallery/Tech%20%26%20Platform/Front%20Door%20Demand%20Manager%20%26%20Business%20Case%20Builder%20Demo.mp4?csf=1&web=1&e=cHifuD",
+        thumbnail: "thumbnails/Front Door Demand Manager and Business Case Builder.png"
+      }
+    ];
+
+    function esc(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function demoCardHTML(d) {
+      const thumbWrap = d.thumbnail
+        ? '<img class="demo-card__thumb" src="' + esc(d.thumbnail) + '" alt="' + esc(d.name) + '" loading="lazy">'
+        : '<div class="demo-card__thumb-placeholder">' +
+            '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>' +
+          '</div>';
+
+      const btn = d.link
+        ? '<a class="btn btn--watch" href="' + esc(d.link) + '" target="_blank" rel="noopener noreferrer">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>' +
+            'Watch Demo</a>'
+        : '<span class="btn btn--watch btn--watch--disabled">Coming soon</span>';
+
+      return (
+        '<div class="demo-card">' +
+          '<div class="demo-card__thumb-wrap">' + thumbWrap + '</div>' +
+          '<div class="demo-card__body">' +
+            '<h3>' + esc(d.name) + '</h3>' +
+            '<p class="demo-card__desc">' + esc(d.description) + '</p>' +
+            btn +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    function renderTechPlatformDemos() {
+      document.getElementById('techPlatformGrid').innerHTML =
+        TECH_PLATFORM_DEMOS.map(demoCardHTML).join('');
+    }
+
+    renderTechPlatformDemos();
+  </script>
+</body>
+</html>
